@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Source artwork for the UBL file-type-association icon (§7c). Rasterise to the
+  PNG sizes the MSIX manifest references (Assets\invoice.png and its scaled
+  targets) during packaging — see docs/packaging.md.
+-->
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#eef2f9"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="#0b5fff"/>
+  <!-- Document with a folded corner -->
+  <path d="M72 40h74l38 38v138a10 10 0 0 1-10 10H72a10 10 0 0 1-10-10V50a10 10 0 0 1 10-10z"
+        fill="url(#paper)"/>
+  <path d="M146 40l38 38h-30a8 8 0 0 1-8-8z" fill="#c7d4ec"/>
+  <!-- Invoice lines -->
+  <g fill="#0b5fff">
+    <rect x="86" y="96" width="58" height="10" rx="5"/>
+    <rect x="86" y="120" width="84" height="8" rx="4" fill="#9fb4d8"/>
+    <rect x="86" y="138" width="84" height="8" rx="4" fill="#9fb4d8"/>
+    <rect x="86" y="156" width="84" height="8" rx="4" fill="#9fb4d8"/>
+  </g>
+  <!-- Total bar -->
+  <rect x="86" y="182" width="84" height="14" rx="7" fill="#0b5fff"/>
+</svg>

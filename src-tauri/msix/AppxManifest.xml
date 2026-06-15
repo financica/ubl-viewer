@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  MSIX package manifest for the Microsoft Store build (§7, §8).
+
+  This is a TEMPLATE. The placeholders in `Identity` are assigned by Partner
+  Center when you reserve the app name — copy them from
+  Partner Center → Product → Product identity. Do not invent them.
+
+  The headline capability is the <FileTypeAssociation> below: it makes Windows
+  offer UBL Viewer in "Open with" for .xml files and lets the Store surface the
+  app to users who don't have it yet — WITHOUT hijacking the .xml default
+  handler (§7a). Content sniffing (§6c) means a non-UBL .xml still opens to a
+  clean "not a UBL invoice" message rather than a broken view.
+
+  Packaging flow and the makeappx/signtool commands live in docs/packaging.md.
+-->
+<Package
+    xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+    xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+    xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+    IgnorableNamespaces="uap rescap">
+
+  <Identity
+      Name="REPLACE_WITH_PARTNER_CENTER_NAME"
+      Publisher="CN=REPLACE_WITH_PARTNER_CENTER_PUBLISHER_ID"
+      Version="0.1.0.0"
+      ProcessorArchitecture="x64" />
+
+  <Properties>
+    <DisplayName>UBL Viewer</DisplayName>
+    <PublisherDisplayName>Financica</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <Description>View UBL e-invoices and credit notes (Peppol BIS Billing 3.0 / EN 16931), entirely on-device.</Description>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.22621.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+
+  <Applications>
+    <Application Id="UBLViewer" Executable="ubl-viewer.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements
+          DisplayName="UBL Viewer"
+          Description="View UBL e-invoices and credit notes."
+          BackgroundColor="#0b5fff"
+          Square150x150Logo="Assets\Square150x150Logo.png"
+          Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square310x310Logo="Assets\Square310x310Logo.png" Square71x71Logo="Assets\Square71x71Logo.png" />
+      </uap:VisualElements>
+
+      <Extensions>
+        <!-- The key capability: register as a HANDLER for .xml (§7a). The user
+             still chooses the default; we never silently take it over. -->
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="ublinvoice">
+            <uap:DisplayName>UBL e-invoice</uap:DisplayName>
+            <uap:Logo>Assets\invoice.png</uap:Logo>
+            <uap:SupportedFileTypes>
+              <uap:FileType>.xml</uap:FileType>
+              <!-- If/when UBL files arrive with a dedicated extension, add it:
+              <uap:FileType>.ubl</uap:FileType> -->
+            </uap:SupportedFileTypes>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <!-- Full-trust desktop app; no network capability is declared because the
+         document path makes no network requests (§11). -->
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>

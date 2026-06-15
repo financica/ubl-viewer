@@ -1,0 +1,18 @@
+{
+	"$schema": "../gen/schemas/desktop-schema.json",
+	"identifier": "default",
+	"description": "Minimal surface: read user-chosen/associated files, open dialog, set window title (§11).",
+	"windows": ["main"],
+	"permissions": [
+		"core:default",
+		"core:window:allow-set-title",
+		"core:window:allow-set-focus",
+		"dialog:allow-open",
+		"cli:default",
+		"fs:allow-read-file",
+		{
+			"identifier": "fs:scope",
+			"allow": [{ "path": "**" }]
+		}
+	]
+}
