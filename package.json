@@ -1,7 +1,7 @@
 {
 	"name": "ubl-viewer",
 	"private": true,
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
@@ -18,7 +18,6 @@
 		"@financica/react-ubl-renderer": "^0.2.0",
 		"@financica/ubl": "^0.6.0",
 		"@tauri-apps/api": "^2",
-		"@tauri-apps/plugin-cli": "^2",
 		"@tauri-apps/plugin-dialog": "^2",
 		"@tauri-apps/plugin-fs": "^2",
 		"react": "^19.1.0",

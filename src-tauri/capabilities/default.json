@@ -8,7 +8,6 @@
 		"core:window:allow-set-title",
 		"core:window:allow-set-focus",
 		"dialog:allow-open",
-		"cli:default",
 		"fs:allow-read-file",
 		{
 			"identifier": "fs:scope",

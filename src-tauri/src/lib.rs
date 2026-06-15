@@ -50,7 +50,6 @@ pub fn run() {
     builder
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
-        .plugin(tauri_plugin_cli::init())
         .setup(|app| {
             // First launch: the file (if any) is in this process's argv.
             let path = file_arg(&std::env::args().collect::<Vec<_>>());
