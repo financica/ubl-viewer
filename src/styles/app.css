@@ -49,6 +49,8 @@ body {
 	color: var(--ink);
 	background: var(--bg);
 	-webkit-font-smoothing: antialiased;
+	/* No rubber-band/elastic overscroll — this is a desktop app, not a mobile one. */
+	overscroll-behavior: none;
 }
 
 /* Search highlights (CSS Custom Highlight API). */
@@ -276,6 +278,7 @@ body {
 .app__body {
 	flex: 1 1 auto;
 	overflow: auto;
+	overscroll-behavior: contain;
 	padding: 24px 16px;
 }
 
@@ -500,5 +503,171 @@ body {
 	}
 	* {
 		scroll-behavior: auto !important;
+	}
+}
+
+/* ---- Raw XML header / copy ------------------------------------------- */
+.raw-xml-wrap {
+	max-width: 1000px;
+	margin-inline: auto;
+}
+.raw-xml-toolbar {
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: 8px;
+}
+
+/* ---- Attachments ------------------------------------------------------ */
+.attachments {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-wrap: wrap;
+	padding: 8px 12px;
+	background: var(--surface);
+	border-bottom: 1px solid var(--border);
+	flex: 0 0 auto;
+}
+.attachments__label {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 12px;
+	color: var(--muted);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+.attachment {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 5px 8px 5px 10px;
+	background: var(--surface-2);
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	font-size: 13px;
+	max-width: 320px;
+}
+.attachment__icon {
+	flex: 0 0 auto;
+}
+.attachment__name {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.attachment__size {
+	color: var(--muted);
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+}
+.attachment__btn {
+	font: inherit;
+	font-size: 12px;
+	border: 0;
+	background: transparent;
+	color: var(--brand);
+	cursor: pointer;
+	padding: 2px 4px;
+	border-radius: 4px;
+}
+.attachment__btn:hover {
+	background: color-mix(in srgb, var(--brand) 14%, transparent);
+}
+
+/* ---- Attachment preview overlay -------------------------------------- */
+.preview-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 60;
+	background: rgba(2, 6, 23, 0.62);
+	display: flex;
+	flex-direction: column;
+}
+.preview-overlay__bar {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 10px 14px;
+	background: var(--surface);
+	border-bottom: 1px solid var(--border);
+}
+.preview-overlay__title {
+	flex: 1 1 auto;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 14px;
+}
+.preview-overlay__frame {
+	flex: 1 1 auto;
+	border: 0;
+	width: 100%;
+	background: #525659; /* matches the Chromium PDF viewer chrome */
+}
+.preview-overlay__image {
+	flex: 1 1 auto;
+	object-fit: contain;
+	min-height: 0;
+	padding: 16px;
+}
+
+/* ---- About dialog ----------------------------------------------------- */
+.preview-overlay {
+	align-items: stretch;
+}
+.about {
+	margin: auto;
+	max-width: 420px;
+	text-align: center;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: 16px;
+	padding: 28px 32px;
+	box-shadow: 0 20px 60px rgba(2, 6, 23, 0.45);
+}
+.about__meta {
+	color: var(--muted);
+	font-size: 12px;
+	margin: 0 0 18px;
+}
+
+/* ---- Print: clean, chrome-free output (§9) ---------------------------- */
+@media print {
+	.toolbar,
+	.tabbar,
+	.searchbar,
+	.attachments,
+	.drop-overlay,
+	.preview-overlay {
+		display: none !important;
+	}
+	html,
+	body,
+	#root,
+	.app,
+	.app__body,
+	.invoice-scroll {
+		height: auto !important;
+		overflow: visible !important;
+		background: #fff !important;
+	}
+	.app {
+		display: block !important;
+	}
+	.app__body {
+		padding: 0 !important;
+	}
+	/* Never print at the on-screen zoom level, and never in dark colors. */
+	.invoice-scroll {
+		zoom: 1 !important;
+	}
+	.ubl-invoice {
+		box-shadow: none !important;
+		border: 0 !important;
+		max-width: none !important;
+		background: #fff !important;
+		color: #000 !important;
 	}
 }

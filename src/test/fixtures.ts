@@ -7,6 +7,7 @@ export const FIXTURES = [
 	"invoice-basic.xml",
 	"credit-note.xml",
 	"invoice-utf16.xml",
+	"invoice-with-pdf.xml",
 	"not-ubl.xml",
 	"empty.xml",
 ] as const;

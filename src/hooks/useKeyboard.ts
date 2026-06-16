@@ -1,20 +1,19 @@
 import { useEffect } from "react";
-import { openWithDialog } from "../core/openFile";
-import { printInvoice } from "../core/print";
 import { actions, activeDoc } from "../core/store";
 import { useStore } from "../core/store";
 
 /**
- * Global keyboard shortcuts (§9). Uses Ctrl on Windows/Linux and ⌘ on macOS.
+ * In-page keyboard shortcuts (§9). Uses Ctrl on Windows/Linux and ⌘ on macOS.
  *
- *   Ctrl/⌘ + O           Open…
- *   Ctrl/⌘ + W           Close tab
- *   Ctrl/⌘ + P           Print / export PDF
  *   Ctrl/⌘ + F           Find in document
  *   Ctrl/⌘ + R           Toggle raw XML
  *   Ctrl/⌘ + + / - / 0   Zoom in / out / reset
  *   Ctrl/⌘ + Tab         Next tab   (Ctrl/⌘ + Shift + Tab = previous)
  *   Escape               Close find
+ *
+ * Open (Ctrl+O), Close Tab (Ctrl+W) and Print (Ctrl+P) are owned by the native
+ * application menu / the system print accelerator (see hooks/useMenu.ts), so
+ * they are intentionally NOT handled here — duplicating them would fire twice.
  */
 export function useKeyboard(): void {
 	const state = useStore();
@@ -30,25 +29,6 @@ export function useKeyboard(): void {
 			if (!mod) return;
 
 			switch (e.key.toLowerCase()) {
-				case "o":
-					e.preventDefault();
-					void openWithDialog();
-					return;
-				case "w": {
-					if (state.activeId) {
-						e.preventDefault();
-						actions.closeDoc(state.activeId);
-					}
-					return;
-				}
-				case "p": {
-					const doc = activeDoc(state);
-					if (doc?.invoice) {
-						e.preventDefault();
-						printInvoice(doc.invoice);
-					}
-					return;
-				}
 				case "f": {
 					const doc = activeDoc(state);
 					if (doc?.invoice) {

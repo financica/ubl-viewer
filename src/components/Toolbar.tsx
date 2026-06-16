@@ -80,7 +80,7 @@ export function Toolbar() {
 						<button
 							type="button"
 							className="iconbtn"
-							onClick={() => doc?.invoice && printInvoice(doc.invoice)}
+							onClick={() => printInvoice()}
 							aria-label="Print or export PDF (Ctrl+P)"
 							title="Print / export PDF (Ctrl+P)"
 						>

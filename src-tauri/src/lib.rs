@@ -8,7 +8,8 @@
 
 use std::sync::Mutex;
 
-use tauri::{Manager, State};
+use tauri::menu::{MenuBuilder, MenuItemBuilder, PredefinedMenuItem, SubmenuBuilder};
+use tauri::{Emitter, Manager, State};
 
 /// Holds the file path the app was launched with (if any), until the frontend
 /// picks it up exactly once via [`take_launch_file`].
@@ -27,6 +28,51 @@ fn take_launch_file(state: State<LaunchFile>) -> Option<String> {
     state.0.lock().ok()?.take()
 }
 
+/// Build the native application menu. Each item emits a `menu` event carrying
+/// its id; the frontend (hooks/useMenu.ts) runs the matching command, so menu,
+/// toolbar, and keyboard all share one implementation.
+///
+/// Accelerators are set only for commands the webview does NOT already own
+/// (Open, Close). Print relies on the system's native Ctrl+P, and Find/Zoom/Raw
+/// are handled in-page, to avoid a command firing twice.
+fn install_menu(app: &tauri::App) -> tauri::Result<()> {
+    let file = SubmenuBuilder::new(app, "File")
+        .item(
+            &MenuItemBuilder::new("Open…")
+                .id("open")
+                .accelerator("CmdOrCtrl+O")
+                .build(app)?,
+        )
+        .item(
+            &MenuItemBuilder::new("Close Tab")
+                .id("close")
+                .accelerator("CmdOrCtrl+W")
+                .build(app)?,
+        )
+        .separator()
+        .item(&MenuItemBuilder::new("Print…").id("print").build(app)?)
+        .separator()
+        .item(&PredefinedMenuItem::quit(app, Some("Quit"))?)
+        .build()?;
+
+    let view = SubmenuBuilder::new(app, "View")
+        .item(&MenuItemBuilder::new("Find…").id("find").build(app)?)
+        .item(&MenuItemBuilder::new("Toggle Raw XML").id("raw").build(app)?)
+        .separator()
+        .item(&MenuItemBuilder::new("Zoom In").id("zoom-in").build(app)?)
+        .item(&MenuItemBuilder::new("Zoom Out").id("zoom-out").build(app)?)
+        .item(&MenuItemBuilder::new("Actual Size").id("zoom-reset").build(app)?)
+        .build()?;
+
+    let help = SubmenuBuilder::new(app, "Help")
+        .item(&MenuItemBuilder::new("About UBL Viewer").id("about").build(app)?)
+        .build()?;
+
+    let menu = MenuBuilder::new(app).items(&[&file, &view, &help]).build()?;
+    app.set_menu(menu)?;
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let mut builder = tauri::Builder::default();
@@ -36,7 +82,6 @@ pub fn run() {
     #[cfg(desktop)]
     {
         builder = builder.plugin(tauri_plugin_single_instance::init(|app, argv, _cwd| {
-            use tauri::Emitter;
             if let Some(path) = file_arg(&argv) {
                 let _ = app.emit("open-file", path);
             }
@@ -54,7 +99,12 @@ pub fn run() {
             // First launch: the file (if any) is in this process's argv.
             let path = file_arg(&std::env::args().collect::<Vec<_>>());
             app.manage(LaunchFile(Mutex::new(path)));
+            install_menu(app)?;
             Ok(())
+        })
+        .on_menu_event(|app, event| {
+            // Forward the menu item id to the webview, which runs the command.
+            let _ = app.emit("menu", event.id().0.as_str());
         })
         .invoke_handler(tauri::generate_handler![take_launch_file])
         .run(tauri::generate_context!())
