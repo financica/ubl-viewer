@@ -40,8 +40,15 @@
 		],
 		"fileAssociations": [
 			{
+				"ext": ["ubl"],
+				"name": "UBL invoice",
+				"description": "UBL e-invoice or credit note",
+				"mimeType": "application/xml",
+				"role": "Viewer"
+			},
+			{
 				"ext": ["xml"],
-				"name": "UBL e-invoice",
+				"name": "XML document",
 				"description": "UBL e-invoice or credit note",
 				"mimeType": "application/xml",
 				"role": "Viewer"

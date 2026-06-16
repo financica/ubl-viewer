@@ -53,16 +53,28 @@
       </uap:VisualElements>
 
       <Extensions>
-        <!-- The key capability: register as a HANDLER for .xml (§7a). The user
-             still chooses the default; we never silently take it over. -->
+        <!-- Dedicated .ubl type. Because UBL Viewer is the only app that claims
+             .ubl, Windows uses it by default for those files — without touching
+             the shared .xml default (§7a). Use this when your pipeline can name
+             inbound invoices `*.ubl`. -->
         <uap:Extension Category="windows.fileTypeAssociation">
           <uap:FileTypeAssociation Name="ublinvoice">
-            <uap:DisplayName>UBL e-invoice</uap:DisplayName>
+            <uap:DisplayName>UBL invoice</uap:DisplayName>
+            <uap:Logo>Assets\invoice.png</uap:Logo>
+            <uap:SupportedFileTypes>
+              <uap:FileType>.ubl</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+        <!-- .xml as a HANDLER only (not the default). The user still chooses the
+             default; we never silently take .xml over. Note: Windows keys on the
+             LAST extension, so `invoice.ubl.xml` is an .xml file here. -->
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="xmlinvoice">
+            <uap:DisplayName>UBL e-invoice (XML)</uap:DisplayName>
             <uap:Logo>Assets\invoice.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType>.xml</uap:FileType>
-              <!-- If/when UBL files arrive with a dedicated extension, add it:
-              <uap:FileType>.ubl</uap:FileType> -->
             </uap:SupportedFileTypes>
           </uap:FileTypeAssociation>
         </uap:Extension>
